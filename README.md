@@ -16,7 +16,7 @@
 在.pro里加QT += network
 
 主程序这样写：
-
+{
 #include<KDlcore.h>
 
 #include<base.h>
@@ -63,4 +63,5 @@ int main(int argc, char *argv[])
     dl->start();
     a.exec();
     delete ifo;
+}
 }
