@@ -18,16 +18,12 @@
 主程序这样写：
 ```
 #include<KDlcore.h>
-
 #include<base.h>
 
 map<pair<int,int>,QString>failtip={{{0,0},"在程序尝试自动填充时，主链接（第一条链接）响应超时"},{{0,1},"传输持续响应超时"},{{1,0},"下载目录无法创建"},{{1,1},"日志目录无法创建"},{{1,2},"无法写入日志"},{{1,3},"合并时出错"},{{2,0},"在程序尝试自动填充终止字节数时，通过主链接（第一条链接）得到的响应头中没有Content-Length字段"},{{2,1},"在程序尝试自动填充时，通过主链接（第一条链接）得到的响应头中的状态码不正确"}};
 
 
-int main(int argc, char *argv[])
-
-{
-
+int main(int argc, char *argv[]){
     QCoreApplication a(argc, argv);
     auto *ifo=new KDlinfo(KUHG({{{"（你要下的链接）"},{{"User-Agent","（对应的ua）"},{"Cookie","（对应的饼干）"}}}}));
     auto *dl=new KDlcore(ifo);
