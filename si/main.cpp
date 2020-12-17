@@ -8,7 +8,6 @@ map<QString,QString>other_config;
 map<QString,KDlcore*>all_tasks;
 inline void rd(){
     cupt=QApplication::applicationDirPath();
-
     dlconfigpath=cupt+"/si-data/settings/dlconfig.txt",headerpath=cupt+"/si-data/settings/header.txt",taskindexpath=cupt+"/si-data/taskindex.txt",othercfpath=cupt+"/si-data/settings/otherconfig.txt";
     QFile header_file(headerpath);
     if(header_file.open(QIODevice::ReadOnly)==false){

@@ -51,7 +51,7 @@ newtask::newtask(const QString &taskid, QWidget *parent) :
             ui->configtable->item(row,col)->setText(getpath);
         }
     });
-    ui->headeredit->setText(allheader);
+    ui->headeredit->setPlainText(allheader);
     dct(ui->start,btnc,this,&newtask::fill);
 }
 

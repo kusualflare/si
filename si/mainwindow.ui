@@ -45,6 +45,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="addx">
+            <property name="toolTip">
+             <string>新建任务(高级)</string>
+            </property>
             <property name="text">
              <string>高级新建</string>
             </property>
@@ -53,7 +56,7 @@
           <item>
            <widget class="QPushButton" name="add">
             <property name="toolTip">
-             <string>新建任务（普通）</string>
+             <string>新建任务(普通)</string>
             </property>
             <property name="text">
              <string>新建</string>
@@ -126,7 +129,14 @@
          </layout>
         </item>
         <item>
-         <widget class="QTableWidget" name="tasktable"/>
+         <widget class="QTableWidget" name="tasktable">
+          <attribute name="verticalHeaderMinimumSectionSize">
+           <number>10</number>
+          </attribute>
+          <attribute name="verticalHeaderDefaultSectionSize">
+           <number>15</number>
+          </attribute>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -138,15 +148,15 @@
         <item>
          <widget class="QToolBox" name="settingtool">
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="settings_other">
            <property name="geometry">
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>982</width>
-             <height>584</height>
+             <width>197</width>
+             <height>144</height>
             </rect>
            </property>
            <attribute name="label">
@@ -220,8 +230,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>89</width>
-             <height>89</height>
+             <width>982</width>
+             <height>584</height>
             </rect>
            </property>
            <attribute name="label">
@@ -229,11 +239,7 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
-             <widget class="QTextBrowser" name="headeredit">
-              <property name="readOnly">
-               <bool>false</bool>
-              </property>
-             </widget>
+             <widget class="QPlainTextEdit" name="headeredit"/>
             </item>
            </layout>
           </widget>

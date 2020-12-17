@@ -2,8 +2,8 @@
 #define NEWTASK_H
 
 #include <QWidget>
-class KDlcore;
 class KDlinfo;
+class KDlcore;
 
 namespace Ui {
 class newtask;

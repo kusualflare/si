@@ -12,12 +12,12 @@ changeuh::changeuh(const QString &taskid,QWidget *parent) :
     d=all_tasks[taskid];
     info=d->info();
     ui->setupUi(this);
-    ui->textEdit->setText(to_QString(info->url_header()));
+    ui->plainTextEdit->setPlainText(to_QString(info->url_header()));
     dct(ui->ok,btnc,this,&changeuh::cpk);
 }
 
 void changeuh::cpk(){
-    KUHG p=to_KUHG(ui->textEdit->toPlainText());
+    KUHG p=to_KUHG(ui->plainTextEdit->toPlainText());
     bool flag=true;
     for(auto &i:p)if(i.first.size()){
         flag=false;

@@ -6,6 +6,7 @@
 #include <changeuh.h>
 #include <dlcftw.h>
 #include <msg.h>
+#include <kclock.h>
 extern QString cupt,othercfpath,taskindexpath,dlconfigpath,allheader,headerpath;
 extern vector<QString>stv;
 extern map<QString,KDlcore*>all_tasks;
@@ -16,26 +17,25 @@ extern map<QString,QString>other_config;
 extern map<pair<int,int>,QString>failtip;
 vector<QString>taskid_v;
 const QPoint ttw(37,96);//放弃治疗了，用这个表示任务列表中左上第一个单元格可选区域左上角对于主窗体的相对坐标，来作为右键菜单的偏移量
-
-void save_otherconfig(){
+inline void save_otherconfig(){
     QFile file(othercfpath);
     file.open(QIODevice::WriteOnly);
     QTextStream outfile(&file);
     outfile.setCodec("utf8");
-    for(auto &i:other_config)outfile<<i.first<<'='<<i.second<<endl;
+    for(auto &i:other_config)outfile<<i.first<<'='<<i.second<<Qt::endl;
 }
-void beep(){
+inline void beep(){
     if(other_config["beep_at_suc"].toUInt())QApplication::beep();
 }
 inline QString gtid(){
     return QDateTime::currentDateTime().toString("yyyyMMddhhmmsszzz");
 }
-void write_taskindex(){
+inline void write_taskindex(){
     QFile file(taskindexpath);
     file.open(QIODevice::WriteOnly);
     QTextStream outfile(&file);
     outfile.setCodec("utf8");
-    for(auto &i:all_tasks)outfile<<i.first<<endl;
+    for(auto &i:all_tasks)outfile<<i.first<<Qt::endl;
 }
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -44,7 +44,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("si");
     setWindowIcon(QIcon(cupt+"/si-data/ico/siico.png"));
-
     menu=new QMenu("选项");
     ac_openpath=new QAction("打开下载目录");
     ac_setuh=new QAction("更改链接-请求头");
@@ -72,14 +71,14 @@ MainWindow::MainWindow(QWidget *parent)
     dct(btn,btnc,this,&MainWindow::hide);
 
     dct(ui->tbwd,&QTabWidget::currentChanged,[this](int index){
-        ui->statusbar->showMessage(index==0?"“失败”属于一种暂停，程序重启之后所有的失败会变成已暂停":index==1?"设置将自动保存，下载相关设置仅在部分时候自动填写进输入框或表格内":"");
+        ui->statusbar->showMessage(index==0?"“失败”属于一种暂停，程序重启之后所有的失败会变成已暂停":index==1?"设置将自动保存，下载相关设置仅在部分时候自动填写进输入框或表格内":"“重建”的账号会被放到列表末尾");
     });
     if(ui->tbwd->currentIndex()==0)ui->tbwd->currentChanged(0);
     else ui->tbwd->setCurrentIndex(0);
     ui->tasktable->setColumnCount(10);
-    ui->tasktable->setHorizontalHeaderLabels(QStringList()<<"保存路径"<<"文件名"<<"状态"<<"已下载(M)"<<"总大小(M)"<<"平均速度(M/s)"<<"即时速度(M/s)"<<"连接数"<<"已耗时(s)"<<"预计剩余(s)");
+    ui->tasktable->setHorizontalHeaderLabels(QStringList()<<"保存路径"<<"文件名"<<"状态"<<"已下载"<<"总大小"<<"平均速度"<<"即时速度"<<"连接数"<<"已耗时(s)"<<"预计剩余(s)");
     ui->tasktable->horizontalHeader()->setSectionResizeMode(9,QHeaderView::Stretch);
-    ui->tasktable->setSelectionBehavior ( QAbstractItemView::SelectRows);
+    ui->tasktable->setSelectionBehavior(QAbstractItemView::SelectRows);
 
     ui->addx->setIcon(QApplication::style()->standardIcon(QStyle::SP_FileDialogEnd));
     ui->add->setIcon(QApplication::style()->standardIcon(QStyle::SP_FileDialogNewFolder));
@@ -176,10 +175,10 @@ MainWindow::MainWindow(QWidget *parent)
         file.open(QIODevice::WriteOnly);
         QTextStream outfile(&file);
         outfile.setCodec("utf8");
-        for(auto &i:dl_st)outfile<<i.second.second<<'|'<<i.first<<'='<<i.second.first<<endl;
+        for(auto &i:dl_st)outfile<<i.second.second<<'|'<<i.first<<'='<<i.second.first<<Qt::endl;
     });
-    ui->headeredit->setText(allheader);
-    dct(ui->headeredit,&QTextEdit::textChanged,[this]{
+    ui->headeredit->setPlainText(allheader);
+    dct(ui->headeredit,&QPlainTextEdit::textChanged,[this]{
         allheader=ui->headeredit->toPlainText();
         QFile file(headerpath);
         file.open(QIODevice::WriteOnly);
@@ -195,16 +194,16 @@ MainWindow::MainWindow(QWidget *parent)
         u->setParent(this);
         ui->tasktable->insertRow(j);
         for(int i=0;i<10;++i){
-           QTableWidgetItem *wi;
-           ui->tasktable->setItem(j,i,wi=new QTableWidgetItem);
+            QTableWidgetItem *wi;
+            ui->tasktable->setItem(j,i,wi=new QTableWidgetItem);
             wi->setFlags(wi->flags()&~Qt::ItemIsEditable);
         }
         ui->tasktable->item(j,0)->setText(u->path());
         ui->tasktable->item(j,1)->setText(u->out());
         ui->tasktable->item(j,2)->setText(u->is_suc()?"已完成":"已暂停");
-        ui->tasktable->item(j,3)->setText(QString::number(u->all_dm()/1048576.0));
-        ui->tasktable->item(j,4)->setText(QString::number(u->all_size()/1048576.0));
-        ui->tasktable->item(j,5)->setText(u->scds()==0?"0":QString::number(u->all_dm()/1048576.0/u->scds()));
+        ui->tasktable->item(j,3)->setText(to_sz(u->all_dm()));
+        ui->tasktable->item(j,4)->setText(to_sz(u->all_size()));
+        ui->tasktable->item(j,5)->setText(u->scds()==0?"0":to_sz(u->all_dm()/(ld)u->scds())+"/s");
         ui->tasktable->item(j,6)->setText("0");
         ui->tasktable->item(j,7)->setText("0");
         ui->tasktable->item(j,8)->setText(QString::number(u->scds()));
@@ -213,10 +212,10 @@ MainWindow::MainWindow(QWidget *parent)
             ui->tasktable->item(j,0)->setText(u->path());
             ui->tasktable->item(j,1)->setText(u->out());
             ui->tasktable->item(j,2)->setText(text=="downloading"?"下载中":text=="fail"?"失败":text=="merging"?"正在合并":"已完成");
-            ui->tasktable->item(j,3)->setText(QString::number(u->all_dm()/1048576.0));
-            ui->tasktable->item(j,4)->setText(QString::number(u->all_size()/1048576.0));
-            ui->tasktable->item(j,5)->setText(u->scds()==0?"0":QString::number(u->all_dm()/1048576.0/u->scds()));
-            ui->tasktable->item(j,6)->setText(QString::number(u->dm_ls_sc()/1048576.0));
+            ui->tasktable->item(j,3)->setText(to_sz(u->all_dm()));
+            ui->tasktable->item(j,4)->setText(to_sz(u->all_size()));
+            ui->tasktable->item(j,5)->setText(u->scds()==0?"0":to_sz(u->all_dm()/(ld)u->scds())+"/s");
+            ui->tasktable->item(j,6)->setText(to_sz(u->dm_ls_sc()));
             ui->tasktable->item(j,7)->setText(QString::number(u->cnct_cnt()));
             ui->tasktable->item(j,8)->setText(QString::number(u->scds()));
             ui->tasktable->item(j,9)->setText((u->all_dm()==0?"未知":QString::number(u->scds()*(u->all_size()-u->all_dm())/u->all_dm())));
@@ -309,7 +308,6 @@ MainWindow::MainWindow(QWidget *parent)
         if(d->is_suc())QProcess::execute("explorer",QStringList()<<QString(d->path()+'/'+d->out()).replace('/','\\'));
     });
 }
-
 void MainWindow::sndl(QString taskid){
     taskid_v.push_back(taskid);
     write_taskindex();
@@ -317,22 +315,22 @@ void MainWindow::sndl(QString taskid){
     int j=ui->tasktable->rowCount();
     ui->tasktable->insertRow(j);
     for(int i=0;i<10;++i){
-       QTableWidgetItem *wi;
-       ui->tasktable->setItem(j,i,wi=new QTableWidgetItem);
+        QTableWidgetItem *wi;
+        ui->tasktable->setItem(j,i,wi=new QTableWidgetItem);
         wi->setFlags(wi->flags()&~Qt::ItemIsEditable);
     }
     ui->tasktable->item(j,0)->setText(u->path());
     ui->tasktable->item(j,1)->setText(u->out());
     ui->tasktable->item(j,2)->setText("请求中");
-    ui->tasktable->item(j,4)->setText(QString::number(u->all_size()/1048576.0));
+    ui->tasktable->item(j,4)->setText(to_sz(u->all_size()));
     dct(u,&KDlcore::advanced,[this,j,u](const QString &text){
         ui->tasktable->item(j,0)->setText(u->path());
         ui->tasktable->item(j,1)->setText(u->out());
         ui->tasktable->item(j,2)->setText(text=="downloading"?"下载中":text=="fail"?"失败":text=="merging"?"正在合并":"已完成");
-        ui->tasktable->item(j,3)->setText(QString::number(u->all_dm()/1048576.0));
-        ui->tasktable->item(j,4)->setText(QString::number(u->all_size()/1048576.0));
-        ui->tasktable->item(j,5)->setText(u->scds()==0?"0":QString::number(u->all_dm()/1048576.0/u->scds()));
-        ui->tasktable->item(j,6)->setText(QString::number(u->dm_ls_sc()/1048576.0));
+        ui->tasktable->item(j,3)->setText(to_sz(u->all_dm()));
+        ui->tasktable->item(j,4)->setText(to_sz(u->all_size()));
+        ui->tasktable->item(j,5)->setText(u->scds()==0?"0":to_sz(u->all_dm()/(ld)u->scds())+"/s");
+        ui->tasktable->item(j,6)->setText(to_sz(u->dm_ls_sc()));
         ui->tasktable->item(j,7)->setText(QString::number(u->cnct_cnt()));
         ui->tasktable->item(j,8)->setText(QString::number(u->scds()));
         ui->tasktable->item(j,9)->setText((u->all_dm()==0?"未知":QString::number(u->scds()*(u->all_size()-u->all_dm())/u->all_dm())));
@@ -344,7 +342,6 @@ void MainWindow::sndl(QString taskid){
     });
     u->start();
 }
-
 MainWindow::~MainWindow()
 {
     delete ui;

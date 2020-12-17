@@ -1,17 +1,14 @@
-QT       += core gui
+QT += core gui
 QT += network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-
-TARGET = si
-
-contains(QT_ARCH, i386){
-DESTDIR = C:/f/si
-}else{
-DESTDIR = C:/f/si-x64
-}
-
+RC_ICONS = siico.ico
 CONFIG += c++11
+contains(QT_ARCH, i386) {
+    DESTDIR = G:/si-x86
+} else {
+    DESTDIR = G:/si-x64
+}
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings

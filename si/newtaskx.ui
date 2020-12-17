@@ -33,7 +33,7 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QTextEdit" name="uhedit"/>
+        <widget class="QPlainTextEdit" name="uhedit"/>
        </item>
       </layout>
      </widget>

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 class QPushButton;
+class KPanAc;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -21,9 +22,11 @@ public:
     void sndl(QString);
     int pathit;
     QMenu *menu;
+
     QAction *ac_openpath,*ac_setuh,*ac_wcat;
     int crr;
-
+    void snac(KPanAc*);
+    void build(KPanAc*ii);
 private:
     Ui::MainWindow *ui;
 };

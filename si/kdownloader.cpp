@@ -284,24 +284,24 @@ void KDownloader::write_rcd(const QByteArray &state){
 
     QString s;
     QTextStream word(&s);
-    if(do_not_merge)word<<"do_not_merge"<<endl;
-    word<<state<<endl;
+    if(do_not_merge)word<<"do_not_merge"<<Qt::endl;
+    word<<state<<Qt::endl;
     word<<to_QString(info->url_header());
-    word<<"path="<<info->path<<endl;
-    word<<"out="<<info->out<<endl;
-    for(auto &i:info->rcd)word<<"rcd="<<i<<endl;
-    word<<"all_start="<<info->all_start<<endl;
-    word<<"all_end="<<info->all_end<<endl;
-    word<<"min_part_sz="<<info->min_part_sz<<endl;
-    word<<"max_part_cnt="<<info->max_part_cnt<<endl;
-    word<<"max_cnct_run="<<info->max_cnct_run<<endl;
-    word<<"max_cnct_per_url="<<info->max_cnct_per_url<<endl;
-    word<<"meta_tmot="<<info->meta_tmot<<endl;
-    word<<"body_tmot="<<info->body_tmot<<endl;
-    word<<"dl_tmot="<<info->dl_tmot<<endl;
-    for(size_t i=0;i<part_cnt;++i)word<<"part="<<part_start[i]<<'-'<<part_end[i]<<' '<<part_hv_suc[i]<<endl;
-    word<<"scds="<<scds<<endl;
-    word<<"cnct_cnt="<<cnct_cnt<<endl;
+    word<<"path="<<info->path<<Qt::endl;
+    word<<"out="<<info->out<<Qt::endl;
+    for(auto &i:info->rcd)word<<"rcd="<<i<<Qt::endl;
+    word<<"all_start="<<info->all_start<<Qt::endl;
+    word<<"all_end="<<info->all_end<<Qt::endl;
+    word<<"min_part_sz="<<info->min_part_sz<<Qt::endl;
+    word<<"max_part_cnt="<<info->max_part_cnt<<Qt::endl;
+    word<<"max_cnct_run="<<info->max_cnct_run<<Qt::endl;
+    word<<"max_cnct_per_url="<<info->max_cnct_per_url<<Qt::endl;
+    word<<"meta_tmot="<<info->meta_tmot<<Qt::endl;
+    word<<"body_tmot="<<info->body_tmot<<Qt::endl;
+    word<<"dl_tmot="<<info->dl_tmot<<Qt::endl;
+    for(size_t i=0;i<part_cnt;++i)word<<"part="<<part_start[i]<<'-'<<part_end[i]<<' '<<part_hv_suc[i]<<Qt::endl;
+    word<<"scds="<<scds<<Qt::endl;
+    word<<"cnct_cnt="<<cnct_cnt<<Qt::endl;
     //生成日志内容
 
     for(auto &i:info->rcd){
