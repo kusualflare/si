@@ -6,7 +6,8 @@ typedef std::vector<std::pair<std::vector<QString>,std::vector<std::pair<QByteAr
 
 inline KUHG to_KUHG(const QString &text){
     KUHG x;
-    static QByteArray u,p,key,val;
+    static QString u,p,key;
+    static QByteArray val;
     static int ei,ci,s_id;
     static std::vector<QString>url;
     static std::vector<std::pair<QByteArray,QByteArray>>header;
@@ -21,7 +22,7 @@ inline KUHG to_KUHG(const QString &text){
             while(i<text.size()&&text[i]!='\n')p+=text[i++];
             if((ei=p.indexOf('='))==-1)continue;
             key=p.left(ei);
-            val=p.mid(ei+1);
+            val=p.mid(ei+1).toUtf8();
             if(key=="url")url.push_back(val);
             else if(key=="header"){
                 if((ci=val.indexOf(':'))==-1)continue;
